@@ -1,4 +1,4 @@
-"""Tests for parsing the photo byte stream"""
+"""Test photo parsing."""
 
 import itertools as it
 import unittest as unit
@@ -9,12 +9,11 @@ bs_pre_literal = bytearray(START_PICSUM_TAG)
 
 
 class TestParse(unit.TestCase):
-    """Tests methods defined by the Parse class
+    """Test methods defined by the `Parse` class.
 
     Here we choose to store the values of 'prelude' generators in memory as we
-    know that they'll always be exhausted and used in multiple methods
+    know that they'll always be exhausted and used in multiple methods.
     """
-
     bs_pre = list(b'%c' % byte for byte in bs_pre_literal)
     bs_pre_id = list(it.chain(bs_pre, (b'%c' % byte for byte in PICSUM_TAG)))
 

@@ -1,4 +1,4 @@
-"""Parse Picsum photos to verify and extract photo ID"""
+"""Parse potential Picsum photo and extract photo ID."""
 
 import itertools as it
 from typing import Iterator, Optional
@@ -10,17 +10,16 @@ PICSUM_TAG = b'Picsum ID:'
 
 class Parse:
     def __init__(self, byte_stream: Iterator) -> None:
-        """Representation of a photo as a byte stream
+        """Store photo byte stream and add attribute indicating if stream
+        represents a valid Picsum photo.
 
-        :param byte_stream: the photo byte stream
+        :param byte_stream: photo byte stream
         """
-
         self.byte_stream: Iterator = byte_stream
         self._tag_verified: bool = self._verify_tag()
 
     def _verify_tag(self) -> bool:
-        """Checks if `Picsum ID:` tag is found"""
-
+        """Check if byte stream contains `PICSUM_TAG`."""
         tag_found = it.islice(self.byte_stream,
                               START_PICSUM_TAG,
                               END_PICSUM_TAG)
@@ -30,7 +29,7 @@ class Parse:
         return all(check_gen)
 
     def find_id(self) -> Optional[str]:
-        """Returns the ID if the correct tag is detected
+        """Return photo ID if `PICSUM_TAG` was been detected.
 
         * In case a non-UTF-8 character is encountered, it will be replaced by
           the 'replacement character' FFFD.
@@ -40,9 +39,8 @@ class Parse:
           (https://www.exif.org/Exif2-2.PDF).
 
         * This method assumes that once the `PICSUM_TAG` has been detected,
-          the object is a valid Picsum photo and hence Exif encoded
+          the object is a valid Picsum photo and hence Exif encoded.
         """
-
         if self._tag_verified:
             # First character after PICSUM_TAG is always a space
             id_slice = it.islice(self.byte_stream, END_PICSUM_TAG + 1, None)
