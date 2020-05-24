@@ -1,3 +1,5 @@
+"""Load Picsum photos as byte stream"""
+
 import requests as req
 from requests.exceptions import ConnectionError, Timeout
 from typing import Iterator
@@ -12,7 +14,7 @@ class Load:
         self.url = from_url
 
     def __iter__(self) -> Iterator:
-        """Return the photo as a byte stream.
+        """Returns the photo as a byte stream.
 
         In case of failure the error is shown
         """
