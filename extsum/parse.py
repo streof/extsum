@@ -1,3 +1,5 @@
+"""Parse Picsum photos to verify and extract photo ID"""
+
 import itertools as it
 from typing import Iterator, Optional
 
@@ -7,7 +9,7 @@ PICSUM_TAG = b'Picsum ID:'
 
 
 class Parse:
-    def __init__(self, byte_stream: Iterator):
+    def __init__(self, byte_stream: Iterator) -> None:
         """Representation of a photo as a byte stream
 
         :param byte_stream: the photo byte stream
@@ -17,11 +19,7 @@ class Parse:
         self._tag_verified: bool = self._verify_tag()
 
     def _verify_tag(self) -> bool:
-        """Returns true if `Picsum ID:` tag is found
-
-        Note that `tee()` is not thread safe. However, the body of this method
-        will always be executed in a single thread
-        """
+        """Checks if `Picsum ID:` tag is found"""
 
         tag_found = it.islice(self.byte_stream,
                               START_PICSUM_TAG,
@@ -29,10 +27,7 @@ class Parse:
         tag_expected = (b'%c' % byte for byte in PICSUM_TAG)
         check_gen = (f == e for f, e in it.zip_longest(tag_found, tag_expected))
 
-        iter_all, iter_any = it.tee(check_gen, 2)
-        tag_verified = all(iter_all) and any(iter_any)
-
-        return tag_verified
+        return all(check_gen)
 
     def find_id(self) -> Optional[str]:
         """Returns the ID if the correct tag is detected
