@@ -1,3 +1,5 @@
+"""Tests for parsing the photo byte stream"""
+
 import itertools as it
 import unittest as unit
 from extsum.parse import Parse, PICSUM_TAG, START_PICSUM_TAG
@@ -7,11 +9,10 @@ bs_pre_literal = bytearray(START_PICSUM_TAG)
 
 
 class TestParse(unit.TestCase):
-    """ Tests methods defined by the Parse class
+    """Tests methods defined by the Parse class
 
-    * Here we choose to store the values of 'prelude' generators in memory
-    (instead of using `tee()`) as we know that they'll always be exhausted and
-    used in multiple methods
+    Here we choose to store the values of 'prelude' generators in memory as we
+    know that they'll always be exhausted and used in multiple methods
     """
 
     bs_pre = list(b'%c' % byte for byte in bs_pre_literal)
@@ -38,7 +39,6 @@ class TestParse(unit.TestCase):
         self.assertFalse(bs_parsed._tag_verified)
 
     def test_found_42_id(self):
-        # First character after PICSUM_TAG is always a space
         bs = self.bs_pre_id + [b' ', b'4', b'2', b'\xff']
         bs_parsed = Parse(bs)
         self.assertEqual(bs_parsed.find_id(), '42')
